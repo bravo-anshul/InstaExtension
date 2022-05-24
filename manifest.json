@@ -10,8 +10,5 @@
         "js": ["content.js"],
         "matches": ["<all_urls>"]
     }],
-    "background":{
-        "scripts":["background.js"]
-    },
     "permissions":["tabs"]
 }
