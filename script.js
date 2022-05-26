@@ -2,6 +2,7 @@
 document.getElementById("myButton").addEventListener("click", myFunction);
 document.getElementById("myTopButton").addEventListener("click", myfunctionNew);
 document.getElementById("makeList").addEventListener("click", makeList);
+document.getElementById("clickSeenButton").addEventListener("click", clickSeenButton);
 
 var lastusername = '';
 var count = 0;
@@ -21,6 +22,17 @@ function myfunctionNew(){
 }
 }
 
+
+function clickSeenButton(){
+  let params={
+    active: true,
+    currentWindow: true
+  }
+  chrome.tabs.query(params, gotTabs);
+  function gotTabs(tabs){
+      chrome.tabs.sendMessage(tabs[0].id, "clickSeenButton");
+    } 
+}
 
 function makeList(){
   let params={
