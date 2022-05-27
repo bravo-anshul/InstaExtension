@@ -1,11 +1,13 @@
 
 document.getElementById("myButton").addEventListener("click", myFunction);
-document.getElementById("myTopButton").addEventListener("click", myfunctionNew);
+document.getElementById("search").addEventListener("click", searchNew);
+document.getElementById("search").addEventListener("keypress", searchNew);
 document.getElementById("makeList").addEventListener("click", makeList);
 document.getElementById("clickSeenButton").addEventListener("click", clickSeenButton);
 
 var lastusername = '';
-var count = 0;
+var totalUserCount ;
+
 
 function myfunctionNew(){
   let params={
@@ -15,11 +17,34 @@ function myfunctionNew(){
   chrome.tabs.query(params, gotTabs);
   function gotTabs(tabs){
     console.log("lastUsername is pop up script :"+lastusername)
-    //for(let x =0;x<5;x++){
       chrome.tabs.sendMessage(tabs[0].id, "scrollTop");
-    //   wait(4000);
-    // }
 }
+}
+
+function searchNew(){
+  let params={
+    active: true,
+    currentWindow: true
+  }
+  chrome.tabs.query(params, gotTabs);
+  function gotTabs(tabs){
+    chrome.tabs.sendMessage(tabs[0].id, {"action":"scrollTop"});
+  }
+}
+
+function search(){
+  var searchBy = document.getElementById("searchBox").value.toLowerCase();
+  if(searchBy == '')
+    return;
+  console.log('search by : '+ searchBy);
+  let params={
+    active: true,
+    currentWindow: true
+  }
+  chrome.tabs.query(params, gotTabs);
+  function gotTabs(tabs){
+      chrome.tabs.sendMessage(tabs[0].id, {"action":"search","value":searchBy});
+  }
 }
 
 
@@ -30,7 +55,7 @@ function clickSeenButton(){
   }
   chrome.tabs.query(params, gotTabs);
   function gotTabs(tabs){
-      chrome.tabs.sendMessage(tabs[0].id, "clickSeenButton");
+      chrome.tabs.sendMessage(tabs[0].id, {"action":"clickSeenButton"});
     } 
 }
 
@@ -41,11 +66,7 @@ function makeList(){
   }
   chrome.tabs.query(params, gotTabs);
   function gotTabs(tabs){
-    console.log("lastUsername is pop up script :"+lastusername)
-    //for(let x =0;x<5;x++){
       chrome.tabs.sendMessage(tabs[0].id, "makeList");
-    //   wait(4000);
-    // }
   } 
 }
 
@@ -57,34 +78,27 @@ function myFunction() {
       chrome.tabs.query(params, gotTabs);
       function gotTabs(tabs){
         console.log("lastUsername is pop up script :"+lastusername)
-        //for(let x =0;x<5;x++){
           chrome.tabs.sendMessage(tabs[0].id, lastusername);
-        //   wait(4000);
-        // }
     }
 }
 
 chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage(message, sender, sendResponse){
-  
-  if(lastusername != message){
-    myFunction();
-    lastusername = message;
-    console.log("last username is "+ message);
-    console.log(" count is "+ count);
 
-    count+=1;
+  if(message.search != null && message.currentCount < 140){
+    search();
   }
-  else if (count < 1000){
-    myFunction();
-    lastusername = message;
-    count+=1;
 
+  else if(message.totalCount != null){
+    totalUserCount = message.totalCount;
+    console.log("totalCount recieved :"+message.totalCount);
   }
-    
+  else if(message <= 122){
+    console.log("last username recieved : "+message);
+    makeList();
+  }
 
-  console.log(message);
 }
 
 
