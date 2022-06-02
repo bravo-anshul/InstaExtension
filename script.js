@@ -66,7 +66,7 @@ function makeList(){
   }
   chrome.tabs.query(params, gotTabs);
   function gotTabs(tabs){
-      chrome.tabs.sendMessage(tabs[0].id, "makeList");
+      chrome.tabs.sendMessage(tabs[0].id, {"action":"makeList"});
   } 
 }
 
@@ -86,18 +86,25 @@ chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage(message, sender, sendResponse){
 
-  if(message.search != null && message.currentCount < 140){
+  if(message.action == "searchBy" && message.currentCount <= totalUserCount){
+    console.log("search by functin called.");
     search();
   }
 
-  else if(message.totalCount != null){
-    totalUserCount = message.totalCount;
+  else if(message.action == "printUser" ){
     console.log("totalCount recieved :"+message.totalCount);
+    if(message.totalCount < totalUserCount){
+      console.log("if called");
+      makeList();
+    }
   }
-  else if(message <= 122){
-    console.log("last username recieved : "+message);
-    makeList();
+  else if(message.action == "setTotalCount"){
+    totalUserCount = message.totalCount;
   }
+  // else if(message <= 122){
+  //   console.log("last username recieved : "+message);
+  //   makeList();
+  // }
 
 }
 

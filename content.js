@@ -20,25 +20,29 @@ function gotMessage (message, sender, sendResponse){
 }
 
 function clickSeenButton(){
-    let seenByButton = document.getElementsByClassName('eVFA4');
+    let seenByButton = document.getElementsByClassName('_ac5n');
     let totalCount = seenByButton[0].children[0].innerHTML;
     console.log(totalCount);
     seenByButton[0].click();
-    chrome.runtime.sendMessage({'totalCount':totalCount});
+    chrome.runtime.sendMessage({'action':'setTotalCount','totalCount':totalCount});
 }
 
 
 function makeList(){
-    let divBox = document.getElementsByClassName('             qF0y9          Igw0E     IwRSH      eGOV_       acqo5  vwCYk                                                                                lDRO1                               ');
-    let child = divBox[0].children;
+    // let divBox = document.getElementsByClassName('             qF0y9          Igw0E     IwRSH      eGOV_       acqo5  vwCYk                                                                                lDRO1                               ');
+    // let child = divBox[0].children;
     printUsers();
 }
 
 function scrollDivUp(){
-    let divBox = document.getElementsByClassName('             qF0y9          Igw0E     IwRSH      eGOV_       acqo5  vwCYk                                                                                lDRO1                               ');
+    let divBox = document.getElementsByClassName('_ab8w  _ab94 _ab99 _ab9f _ab9m _ab9o  _ab9w');
     let child = divBox[0].children;
-    child[0].scrollTop = -(child[0].scrollHeight);
-    chrome.runtime.sendMessage({'search': 'searchBy', 'currentCount':0 });
+    console.log("child height : "+ (child[0].scrollHeight));
+    for(let x = child[0].scrollHeight; x>0;x--){
+        child[0].scrollTop = x;
+    }
+    //child[0].scrollTop = -(child[0].scrollHeight);
+    chrome.runtime.sendMessage({'action': 'searchBy', 'currentCount':0 });
 }
 
 function scrollDiv(){
@@ -49,26 +53,26 @@ function scrollDiv(){
 
 function printUsers(){
 
-    let userLists = document.getElementsByClassName('_7UhW9   xLCgt      MMzan    _0PwGv              fDxYl     ');
+    let userLists = document.getElementsByClassName('_aacl _aaco _aacu _aacy _aada');
     for(user of userLists){
         addUserInList(user.innerHTML);
         
     }
     userLists[userLists.length-1].scrollIntoView();
-    lastUsernmaeRecieved = userLists[userLists.length-1].innerHTML;
     console.log(usernameList);
-    chrome.runtime.sendMessage(usernameList.length);
+    chrome.runtime.sendMessage({'action': 'printUser', 'totalCount':usernameList.length });
     
 }
 
 function search(searchBy){
     let flag = true;
-    let userLists = document.getElementsByClassName('_7UhW9   xLCgt      MMzan    _0PwGv              fDxYl     ');
+    let userLists = document.getElementsByClassName('_aacl _aaco _aacu _aacy _aada');
     for(user of userLists){
         if(user.innerHTML.toLowerCase().includes(searchBy)){
             console.log("userFound");
             user.scrollIntoView();
-            //user.style.border = "width: 150px;height: 150px;text-align:center;border-top: 5px solid; border-image:   linear-gradient(to right, grey 25%, yellow 25%, yellow 50%,red 50%, red 75%, teal 75%) 5;";
+            user.style.border = "thick solid red";
+            user.style.border = "thick solid red";
             user.style.border = "thick solid red";
             flag = false;
             break;
@@ -76,7 +80,7 @@ function search(searchBy){
     }
     if(flag){
         userLists[userLists.length-1].scrollIntoView();
-        chrome.runtime.sendMessage({'search': searchBy, 'currentCount':usernameList.length });
+        chrome.runtime.sendMessage({'action': "searchBy",'searchBy':searchBy, 'currentCount':0 });
     }
 }
 
