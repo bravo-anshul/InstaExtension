@@ -1,5 +1,5 @@
 
-document.getElementById("myButton").addEventListener("click", myFunction);
+//document.getElementById("myButton").addEventListener("click", myFunction);
 document.getElementById("search").addEventListener("click", searchNew);
 document.getElementById("search").addEventListener("keypress", searchNew);
 document.getElementById("makeList").addEventListener("click", makeList);
@@ -22,6 +22,7 @@ function myfunctionNew(){
 }
 
 function searchNew(){
+  console.log("Click press working");
   let params={
     active: true,
     currentWindow: true
@@ -29,6 +30,7 @@ function searchNew(){
   chrome.tabs.query(params, gotTabs);
   function gotTabs(tabs){
     chrome.tabs.sendMessage(tabs[0].id, {"action":"scrollTop"});
+    chrome.tabs.sendMessage(tabs[0].id, {"action":"clickSeenButton"});
   }
 }
 
@@ -86,14 +88,14 @@ chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage(message, sender, sendResponse){
 
-  if(message.action == "searchBy" && message.currentCount <= totalUserCount){
+  if(message.action == "searchBy" && message.currentCount <= (totalUserCount-5)){
     console.log("search by functin called.");
     search();
   }
 
   else if(message.action == "printUser" ){
     console.log("totalCount recieved :"+message.totalCount);
-    if(message.totalCount < totalUserCount){
+    if(message.totalCount < (totalUserCount-5)){
       console.log("if called");
       makeList();
     }
@@ -116,3 +118,4 @@ function wait(ms){
     end = new Date().getTime();
  }
 }
+
