@@ -28,9 +28,6 @@ function myfunctionNew(){
   }
 }
 
-function replace(){
-  
-}
 
 function searchNew(){
   let params={
@@ -70,6 +67,17 @@ function clickSeenButton(){
   chrome.tabs.query(params, gotTabs);
   function gotTabs(tabs){
       chrome.tabs.sendMessage(tabs[0].id, {"action":"clickSeenButton"});
+    } 
+}
+
+function replaceDiv(){
+  let params={
+    active: true,
+    currentWindow: true
+  }
+  chrome.tabs.query(params, gotTabs);
+  function gotTabs(tabs){
+      chrome.tabs.sendMessage(tabs[0].id, {"action":"replaceDiv"});
     } 
 }
 

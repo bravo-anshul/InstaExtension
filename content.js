@@ -20,6 +20,9 @@ function gotMessage (message, sender, sendResponse){
     else if(message.action == "makeBorder"){
         makeBorder(message.value);    
     }
+    else if(message.action == "replaceDiv"){
+        replaceDiv();
+    }
     else{
         scrollDiv();
     }
@@ -174,8 +177,16 @@ function addUserInList(user){
     
 }
 
+
+function replaceDiv(){
+    let elem = document.getElementsByClassName("_ab8w  _ab94 _ab97 _ab9h _ab9m _ab9p  _abch");
+    var input = document.createElement("input");
+    input.value = "anshul";
+    console.log(elem);
+    elem[0].replaceWith(input);
+  }
+
 function clearlist(){
     usernameList = [];
-    usernameList[0] = "start";
     scrollDivUp();
 }
