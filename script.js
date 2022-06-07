@@ -1,13 +1,20 @@
 
 //document.getElementById("myButton").addEventListener("click", myFunction);
-document.getElementById("search").addEventListener("click", searchNew);
+document.getElementById("search").addEventListener("click", search);
 document.getElementById("search").addEventListener("keypress", searchNew);
 document.getElementById("makeList").addEventListener("click", makeList);
+document.getElementById("replace").addEventListener("click", replaceDiv);
 document.getElementById("clickSeenButton").addEventListener("click", clickSeenButton);
 
 var lastusername = '';
 var totalUserCount ;
 
+
+document.getElementById("searchBox").addEventListener("keydown", function(){
+  if (event.targetkey === "Enter") {
+    searchNew();
+  }
+});
 
 function myfunctionNew(){
   let params={
@@ -18,19 +25,24 @@ function myfunctionNew(){
   function gotTabs(tabs){
     console.log("lastUsername is pop up script :"+lastusername)
       chrome.tabs.sendMessage(tabs[0].id, "scrollTop");
+  }
 }
+
+function replace(){
+  
 }
 
 function searchNew(){
-  console.log("Click press working");
   let params={
     active: true,
     currentWindow: true
   }
   chrome.tabs.query(params, gotTabs);
   function gotTabs(tabs){
-    chrome.tabs.sendMessage(tabs[0].id, {"action":"scrollTop"});
-    chrome.tabs.sendMessage(tabs[0].id, {"action":"clickSeenButton"});
+    //chrome.tabs.sendMessage(tabs[0].id, {"action":"clearList"});
+    //chrome.tabs.sendMessage(tabs[0].id, {"action":"clickSeenButton"});
+    //chrome.tabs.sendMessage(tabs[0].id, {"action":"scrollTop"});
+    chrome.tabs.sendMessage(tabs[0].id, {"action":"search"});
   }
 }
 
@@ -72,6 +84,17 @@ function makeList(){
   } 
 }
 
+function makeBorder(searchBy){
+  let params={
+    active: true,
+    currentWindow: true
+  }
+  chrome.tabs.query(params, gotTabs);
+  function gotTabs(tabs){
+      chrome.tabs.sendMessage(tabs[0].id, {"action":"makeBorder","value":searchBy});
+  } 
+}
+
 function myFunction() {
     let params={
         active: true,
@@ -88,14 +111,13 @@ chrome.runtime.onMessage.addListener(gotMessage);
 
 function gotMessage(message, sender, sendResponse){
 
-  if(message.action == "searchBy" && message.currentCount <= (totalUserCount-5)){
+  if(message.action == "searchBy" && message.currentCount < (totalUserCount)){
     console.log("search by functin called.");
     search();
   }
-
   else if(message.action == "printUser" ){
     console.log("totalCount recieved :"+message.totalCount);
-    if(message.totalCount < (totalUserCount-5)){
+    if(message.totalCount < (totalUserCount)){
       console.log("if called");
       makeList();
     }
@@ -103,10 +125,9 @@ function gotMessage(message, sender, sendResponse){
   else if(message.action == "setTotalCount"){
     totalUserCount = message.totalCount;
   }
-  // else if(message <= 122){
-  //   console.log("last username recieved : "+message);
-  //   makeList();
-  // }
+  else if(message.action == "makeBorder"){
+    makeBorder(message.searchBy);
+  }
 
 }
 
