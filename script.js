@@ -3,31 +3,19 @@
 document.getElementById("search").addEventListener("click", search);
 document.getElementById("search").addEventListener("keypress", searchNew);
 document.getElementById("makeList").addEventListener("click", makeList);
-document.getElementById("replace").addEventListener("click", replaceDiv);
 document.getElementById("clickSeenButton").addEventListener("click", clickSeenButton);
 
-var lastusername = '';
 var totalUserCount ;
 
+clickSeenButton();
+// makeList();
+console.log("total user count is " + totalUserCount);
 
 document.getElementById("searchBox").addEventListener("keydown", function(){
   if (event.targetkey === "Enter") {
     searchNew();
   }
 });
-
-function myfunctionNew(){
-  let params={
-    active: true,
-    currentWindow: true
-  }
-  chrome.tabs.query(params, gotTabs);
-  function gotTabs(tabs){
-    console.log("lastUsername is pop up script :"+lastusername)
-      chrome.tabs.sendMessage(tabs[0].id, "scrollTop");
-  }
-}
-
 
 function searchNew(){
   let params={
@@ -70,17 +58,6 @@ function clickSeenButton(){
     } 
 }
 
-function replaceDiv(){
-  let params={
-    active: true,
-    currentWindow: true
-  }
-  chrome.tabs.query(params, gotTabs);
-  function gotTabs(tabs){
-      chrome.tabs.sendMessage(tabs[0].id, {"action":"replaceDiv"});
-    } 
-}
-
 function makeList(){
   let params={
     active: true,
@@ -103,17 +80,6 @@ function makeBorder(searchBy){
   } 
 }
 
-function myFunction() {
-    let params={
-        active: true,
-        currentWindow: true
-      }
-      chrome.tabs.query(params, gotTabs);
-      function gotTabs(tabs){
-        console.log("lastUsername is pop up script :"+lastusername)
-          chrome.tabs.sendMessage(tabs[0].id, lastusername);
-    }
-}
 
 chrome.runtime.onMessage.addListener(gotMessage);
 
@@ -134,6 +100,9 @@ function gotMessage(message, sender, sendResponse){
     totalUserCount = message.totalCount;
   }
   else if(message.action == "makeBorder"){
+    makeBorder(message.searchBy);
+  }
+  else if(message.action == "notSeen"){
     makeBorder(message.searchBy);
   }
 

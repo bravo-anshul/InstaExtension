@@ -20,9 +20,6 @@ function gotMessage (message, sender, sendResponse){
     else if(message.action == "makeBorder"){
         makeBorder(message.value);    
     }
-    else if(message.action == "replaceDiv"){
-        replaceDiv();
-    }
     else{
         scrollDiv();
     }
@@ -33,6 +30,8 @@ function clickSeenButton(){
     let totalCount = seenByButton[0].children[0].innerHTML;
     seenByButton[0].click();
     chrome.runtime.sendMessage({'action':'setTotalCount','totalCount':totalCount});
+    handleSomeDiv();
+    
 }
 
 
@@ -143,6 +142,9 @@ function search3(searchBy){
             break;
         }
     }
+    if(flag){
+        chrome.runtime.sendMessage({'action': "notSeen"});
+    }
 }
 
 function makeBorder(searchBy){
@@ -157,13 +159,13 @@ function makeBorder(searchBy){
         child = child[1].children; 
         if(child[0].innerHTML.toLowerCase().includes(searchBy)){
             console.log("userFound");
-            user.style.border = "thick solid red";
+            let border = "background-image: repeating-linear-gradient(-7deg, #ff3333, #ff3333 12.74px, transparent 26px, transparent 29.43px, #ff3333 33px), repeating-linear-gradient(83deg, #ff3333, #ff3333 12.74px, transparent 26px, transparent 29.43px, #ff3333 33px), repeating-linear-gradient(173deg, #ff3333, #ff3333 12.74px, transparent 26px, transparent 29.43px, #ff3333 33px), repeating-linear-gradient(263deg, #ff3333, #ff3333 12.74px, transparent 26px, transparent 29.43px, #ff3333 33px); background-size: 2px 100%, 100% 2px, 2px 100% , 100% 2px; background-position: 0 0, 0 0, 100% 0, 0 100%; background-repeat: no-repeat; "
+            user.style = border;
             flag = false;
             break;
         }
     }
     if(flag){
-        //console.log(usernameList);
         chrome.runtime.sendMessage({'action': "makeBorder",'searchBy':searchBy });
     }
 }
@@ -177,16 +179,27 @@ function addUserInList(user){
     
 }
 
-
-function replaceDiv(){
-    let elem = document.getElementsByClassName("_ab8w  _ab94 _ab97 _ab9h _ab9m _ab9p  _abch");
-    var input = document.createElement("input");
-    input.value = "anshul";
-    console.log(elem);
-    elem[0].replaceWith(input);
-  }
-
 function clearlist(){
     usernameList = [];
     scrollDivUp();
 }
+
+function handleSomeDiv(someDiv) { 
+    console.log("div was handled");
+    if(usernameList != null)
+        makeList();
+}
+
+const observer = new MutationObserver(function (mutations, mutationInstance) {
+    const someDiv = document.getElementsByClassName("_ac78")[0];
+    if (someDiv) {
+        handleSomeDiv(someDiv);
+        mutationInstance.disconnect();
+    }
+});
+
+
+observer.observe(document, {
+    childList: true,
+    subtree:   true
+});
