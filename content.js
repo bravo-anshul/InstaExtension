@@ -143,7 +143,10 @@ function search3(searchBy){
         }
     }
     if(flag){
-        chrome.runtime.sendMessage({'action': "notSeen"});
+        chrome.runtime.sendMessage({'action': "visibleStatus",'value':true});
+    }
+    else{
+        chrome.runtime.sendMessage({'action': "visibleStatus",'value':false});
     }
 }
 

@@ -1,9 +1,8 @@
 
 //document.getElementById("myButton").addEventListener("click", myFunction);
 document.getElementById("search").addEventListener("click", search);
-document.getElementById("search").addEventListener("keypress", searchNew);
-document.getElementById("makeList").addEventListener("click", makeList);
-document.getElementById("clickSeenButton").addEventListener("click", clickSeenButton);
+// document.getElementById("makeList").addEventListener("click", makeList);
+// document.getElementById("clickSeenButton").addEventListener("click", clickSeenButton);
 
 var totalUserCount ;
 
@@ -11,9 +10,10 @@ clickSeenButton();
 // makeList();
 console.log("total user count is " + totalUserCount);
 
-document.getElementById("searchBox").addEventListener("keydown", function(){
+document.getElementById("searchBox").addEventListener("keydown", function(event){
+  console.log("key pressed");
   if (event.targetkey === "Enter") {
-    searchNew();
+    search();
   }
 });
 
@@ -80,6 +80,21 @@ function makeBorder(searchBy){
   } 
 }
 
+function setVisibleStatus(seenStatus){
+  let seenStatusButton = document.getElementById("seen");
+  seenStatusButton.style.display = "block";
+  console.log("inside seem fuinction");
+    if(!seenStatus){
+      seenStatusButton.innerHTML = "SEEN";
+      seenStatusButton.style.backgroundColor = "Green";
+      
+    }
+    else{
+      seenStatusButton.innerHTML = "NOT SEEN";
+      seenStatusButton.style.backgroundColor = "RED";
+    }
+}
+
 
 chrome.runtime.onMessage.addListener(gotMessage);
 
@@ -102,8 +117,8 @@ function gotMessage(message, sender, sendResponse){
   else if(message.action == "makeBorder"){
     makeBorder(message.searchBy);
   }
-  else if(message.action == "notSeen"){
-    makeBorder(message.searchBy);
+  else if(message.action == "visibleStatus"){
+    setVisibleStatus(message.value);
   }
 
 }
