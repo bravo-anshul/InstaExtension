@@ -10,9 +10,8 @@ clickSeenButton();
 // makeList();
 console.log("total user count is " + totalUserCount);
 
-document.getElementById("searchBox").addEventListener("keydown", function(event){
-  console.log("key pressed");
-  if (event.targetkey === "Enter") {
+document.getElementById("searchBox").addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
     search();
   }
 });
