@@ -2,8 +2,8 @@
     "name": "InstaSearch",
     "version": "0.1",
     "description": "Tool used to perform a search on your story viewers on Instagram.",
-    "manifest_version": 2,
-    "browser_action":{
+    "manifest_version": 3,
+    "action":{
         "default_popup": "popup.html"
     },
     "icons": {
