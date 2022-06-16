@@ -9,7 +9,7 @@ function gotMessage (message, sender, sendResponse){
         makeList();
     }
     else if(message.action == "search"){
-        search3(message.value);
+        search(message.value);
     }
     else if(message.action == "clickSeenButton"){
         clickSeenButton();    
@@ -21,7 +21,7 @@ function gotMessage (message, sender, sendResponse){
         makeBorder(message.value);    
     }
     else{
-        scrollDiv();
+        scrollDivDown();
     }
 }
 
@@ -34,13 +34,6 @@ function clickSeenButton(){
     
 }
 
-
-function makeList(){
-    // let divBox = document.getElementsByClassName('             qF0y9          Igw0E     IwRSH      eGOV_       acqo5  vwCYk                                                                                lDRO1                               ');
-    // let child = divBox[0].children;
-    printUsers();
-}
-
 function scrollDivUp(){
     let divBox = document.getElementsByClassName('_ab8w  _ab94 _ab99 _ab9f _ab9m _ab9o  _ab9w');
     let child = divBox[0].children;
@@ -51,19 +44,20 @@ function scrollDivUp(){
     chrome.runtime.sendMessage({'action': 'searchBy', 'currentCount':0 });
 }
 
-function printheight(height){
-    let divBox = document.getElementsByClassName('_ab8w  _ab94 _ab99 _ab9f _ab9m _ab9o  _ab9w');
-    let child = divBox[0].children;
-    child[0].scrollTop = height;
-}
-
-function scrollDiv(){
+function scrollDivDown(){
     let divBox = document.getElementsByClassName('             qF0y9          Igw0E     IwRSH      eGOV_       acqo5  vwCYk                                                                                lDRO1                               ');
     let child = divBox[0].children;
     child[0].scrollTop = child[0].scrollHeight;
 }
 
-function printUsers(){
+function moveToUser(height){
+    let divBox = document.getElementsByClassName('_ab8w  _ab94 _ab99 _ab9f _ab9m _ab9o  _ab9w');
+    let child = divBox[0].children;
+    child[0].scrollTop = height;
+}
+
+
+function makeList(){
 
     let userLists = document.getElementsByClassName('_ab8w  _ab94 _ab97 _ab9f _ab9k _ab9p  _ab9- _aba8');
     for(user of userLists){
@@ -78,53 +72,6 @@ function printUsers(){
 
 function search(searchBy){
     let flag = true;
-    let userLists = document.getElementsByClassName('_aacl _aaco _aacu _aacy _aada');
-    
-    for(user of userLists){
-        if(user.innerHTML.toLowerCase().includes(searchBy)){
-            console.log("userFound");
-            for(let x=0;x<50;x++)
-                user.style.border = "thick solid red";
-            flag = false;
-            break;
-        }
-    }
-    if(flag){
-        //console.log(usernameList);
-        userLists[userLists.length-1].scrollIntoView();
-        chrome.runtime.sendMessage({'action': "searchBy",'searchBy':searchBy, 'currentCount':usernameList.length });
-    }
-}
-
-function search2(searchBy){
-    let flag = true;
-    let userLists = document.getElementsByClassName('_ab8w  _ab94 _ab97 _ab9f _ab9k _ab9p  _ab9- _aba8');
-    for(user of userLists){
-        addUserInList(user);
-        let child = user.children;
-        child = child[1].children;
-        if(child[1] == null)
-            continue;
-        
-        child = child[1].children; 
-        if(child[0].innerHTML.toLowerCase().includes(searchBy)){
-            console.log("userFound");
-            user.scrollIntoView();
-            child[0].style.border = "thick solid red";
-            flag = false;
-            break;
-        }
-    }
-    if(flag){
-        //console.log(usernameList);
-        userLists[userLists.length-1].scrollIntoView();
-        console.log(usernameList.length);
-        chrome.runtime.sendMessage({'action': "searchBy",'searchBy':searchBy, 'currentCount':usernameList.length });
-    }
-}
-
-function search3(searchBy){
-    let flag = true;
     console.log("seacj : "+searchBy);
     for(let x = 0;x<usernameList.length;x++){
 
@@ -136,7 +83,7 @@ function search3(searchBy){
         child = child[1].children; 
         if(child[0].innerHTML.toLowerCase().includes(searchBy)){
             console.log("userFound");
-            printheight(x*48);
+            moveToUser(x*48);
             chrome.runtime.sendMessage({'action': "makeBorder",'searchBy':searchBy });
             flag = false;
             break;
@@ -162,7 +109,7 @@ function makeBorder(searchBy){
         child = child[1].children; 
         if(child[0].innerHTML.toLowerCase().includes(searchBy)){
             console.log("userFound");
-            let border = "background-image: repeating-linear-gradient(-7deg, #ff3333, #ff3333 12.74px, transparent 26px, transparent 29.43px, #ff3333 33px), repeating-linear-gradient(83deg, #ff3333, #ff3333 12.74px, transparent 26px, transparent 29.43px, #ff3333 33px), repeating-linear-gradient(173deg, #ff3333, #ff3333 12.74px, transparent 26px, transparent 29.43px, #ff3333 33px), repeating-linear-gradient(263deg, #ff3333, #ff3333 12.74px, transparent 26px, transparent 29.43px, #ff3333 33px); background-size: 2px 100%, 100% 2px, 2px 100% , 100% 2px; background-position: 0 0, 0 0, 100% 0, 0 100%; background-repeat: no-repeat; "
+            let border = "background-image: repeating-linear-gradient(-7deg, #ff3333, #ff3333 12.74px, transparent 26px, transparent 29.43px, #ff3333 33px), repeating-linear-gradient(83deg, #ff3333, #ff3333 12.74px, transparent 26px, transparent 29.43px, #ff3333 33px), repeating-linear-gradient(173deg, #ff3333, #ff3333 12.74px, transparent 26px, transparent 29.43px, #ff3333 33px), repeating-linear-gradient(263deg, #ff3333, #ff3333 12.74px, transparent 26px, transparent 29.43px, #ff3333 33px); background-size: 2px 100%, 100% 2px, 2px 100% , 100% 2px; background-position: 0 0, 0 0, 100% 0, 0 100%; background-repeat: no-repeat; ";
             user.style = border;
             flag = false;
             break;
@@ -177,7 +124,6 @@ function addUserInList(user){
     
     if(!usernameList.includes(user)){
         usernameList.push(user);
-        //console.log({'currentCount':usernameList.length});
     }
     
 }

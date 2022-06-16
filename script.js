@@ -1,13 +1,9 @@
 
-//document.getElementById("myButton").addEventListener("click", myFunction);
 document.getElementById("search").addEventListener("click", search);
-// document.getElementById("makeList").addEventListener("click", makeList);
-// document.getElementById("clickSeenButton").addEventListener("click", clickSeenButton);
 
 var totalUserCount ;
 
 clickSeenButton();
-// makeList();
 console.log("total user count is " + totalUserCount);
 
 document.getElementById("searchBox").addEventListener("keypress", function(event) {
@@ -23,9 +19,6 @@ function searchNew(){
   }
   chrome.tabs.query(params, gotTabs);
   function gotTabs(tabs){
-    //chrome.tabs.sendMessage(tabs[0].id, {"action":"clearList"});
-    //chrome.tabs.sendMessage(tabs[0].id, {"action":"clickSeenButton"});
-    //chrome.tabs.sendMessage(tabs[0].id, {"action":"scrollTop"});
     chrome.tabs.sendMessage(tabs[0].id, {"action":"search"});
   }
 }
